@@ -7,7 +7,7 @@ export type FetchState<T> = {
     error: string | null;
 };
 
-export default function useFetch<T = any>(url: string, options?: { simulateError?: boolean }) {
+export default function useFetch<T = Record<string, unknown>>(url: string, options?: { simulateError?: boolean }) {
     const [state, setState] = useState<FetchState<T>>({
         data: null,
         loading: true,
@@ -26,9 +26,9 @@ export default function useFetch<T = any>(url: string, options?: { simulateError
                 const data = await res.json();
                 if (!mounted) return;
                 setState({ data, loading: false, error: null });
-            } catch (err: any) {
+            } catch (err: unknown) {
                 if (!mounted) return;
-                setState({ data: null, loading: false, error: err.message || 'Failed to fetch' });
+                setState({ data: null, loading: false, error: (err as Error).message || 'Failed to fetch' });
             }
         }
         fetcher();

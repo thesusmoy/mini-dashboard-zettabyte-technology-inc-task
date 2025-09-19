@@ -10,6 +10,12 @@ const items = [
     { href: '/users', label: 'Users' },
 ];
 
+const imgs = [
+    { href: '/images/file.svg', atl: '' },
+    { href: '/images/file.svg', atl: '' },
+    { href: '/images/file.svg', atl: '' },
+];
+
 export default function Sidebar() {
     const [open, setOpen] = useState(true);
 
@@ -21,7 +27,7 @@ export default function Sidebar() {
                 className="h-screen bg-white shadow-md overflow-hidden"
             >
                 <div className="flex text-black items-center justify-between p-4">
-                    <span className={`font-bold text-lg ${!open && 'truncate'}`}>Dashboard</span>
+                    <span className={`font-bold text-lg ${!open && 'truncate hidden'}`}>Dashboard</span>
                     <button onClick={() => setOpen((v) => !v)} aria-label="toggle">
                         {open ? <HiOutlineX /> : <HiOutlineMenu />}
                     </button>
