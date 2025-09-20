@@ -80,8 +80,8 @@ export default function UsersPage() {
             );
         }
         users = users.slice().sort((a, b) => {
-            let aVal = sortBy === 'company' ? a.company?.name || '' : a[sortBy];
-            let bVal = sortBy === 'company' ? b.company?.name || '' : b[sortBy];
+            const aVal = sortBy === 'company' ? a.company?.name || '' : a[sortBy];
+            const bVal = sortBy === 'company' ? b.company?.name || '' : b[sortBy];
             if (aVal < bVal) return sortDir === 'asc' ? -1 : 1;
             if (aVal > bVal) return sortDir === 'asc' ? 1 : -1;
             return 0;
