@@ -51,24 +51,26 @@ export default function UsersPage() {
 
             <Card>
                 <div className="overflow-x-auto">
-                    <table className="w-full text-left">
+                    <table className="w-full text-left rounded-lg overflow-hidden">
                         <thead>
-                            <tr>
-                                <th className="py-2">Name</th>
-                                <th className="py-2">Email</th>
-                                <th className="py-2">Company</th>
+                            <tr className="bg-gray-100">
+                                <th className="py-3 px-4 font-semibold text-black">Name</th>
+                                <th className="py-3 px-4 font-semibold text-black">Email</th>
+                                <th className="py-3 px-4 font-semibold text-black">Company</th>
                             </tr>
                         </thead>
                         <tbody>
-                            {filtered?.map((u) => (
+                            {filtered?.map((u, idx) => (
                                 <tr
                                     key={u.id}
                                     onClick={() => setSelected(u)}
-                                    className="cursor-pointer hover:bg-gray-50"
+                                    className={`cursor-pointer transition-colors duration-150 ${
+                                        idx % 2 === 0 ? 'bg-white' : 'bg-gray-50'
+                                    } hover:bg-indigo-50`}
                                 >
-                                    <td className="py-2">{u.name}</td>
-                                    <td className="py-2">{u.email}</td>
-                                    <td className="py-2">{u.company?.name}</td>
+                                    <td className="py-3 px-4 font-medium text-gray-800">{u.name}</td>
+                                    <td className="py-3 px-4 text-gray-600">{u.email}</td>
+                                    <td className="py-3 px-4 text-gray-600">{u.company?.name}</td>
                                 </tr>
                             ))}
                         </tbody>
