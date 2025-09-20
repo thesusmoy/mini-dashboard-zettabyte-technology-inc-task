@@ -8,11 +8,13 @@ function Spinner() {
         />
     );
 }
-import React, { useState, useMemo } from 'react';
+
+import React, { useState, useMemo, lazy, Suspense } from 'react';
 import useFetch from '../../hooks/useFetch';
-import Card from '../../components/Card';
-import Modal from '../../components/Modal';
 import useDebounce from '../../hooks/useDebounce';
+
+const Card = lazy(() => import('../../components/Card'));
+const Modal = lazy(() => import('../../components/Modal'));
 
 import type { User } from '../../types/entities';
 
@@ -167,46 +169,50 @@ export default function UsersPage() {
             )}
             {error && <div className="text-red-600">Failed to load users: {error}</div>}
 
-            <Card>
-                <div className="overflow-x-auto">
-                    <table className="w-full text-left rounded-lg overflow-hidden">
-                        <thead>
-                            <tr className="bg-gray-100">
-                                <th className="py-3 px-4 font-semibold text-black">Name</th>
-                                <th className="py-3 px-4 font-semibold text-black">Email</th>
-                                <th className="py-3 px-4 font-semibold text-black">Company</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {filtered?.map((u, idx) => (
-                                <tr
-                                    key={u.id}
-                                    onClick={() => setSelected(u)}
-                                    className={`cursor-pointer transition-colors duration-150 ${
-                                        idx % 2 === 0 ? 'bg-white' : 'bg-gray-50'
-                                    } hover:bg-indigo-50`}
-                                >
-                                    <td className="py-3 px-4 font-medium text-gray-800">{u.name}</td>
-                                    <td className="py-3 px-4 text-gray-600">{u.email}</td>
-                                    <td className="py-3 px-4 text-gray-600">{u.company?.name}</td>
+            <Suspense fallback={<div className="h-32 flex items-center justify-center">Loading table...</div>}>
+                <Card>
+                    <div className="overflow-x-auto">
+                        <table className="w-full text-left rounded-lg overflow-hidden">
+                            <thead>
+                                <tr className="bg-gray-100">
+                                    <th className="py-3 px-4 font-semibold text-black">Name</th>
+                                    <th className="py-3 px-4 font-semibold text-black">Email</th>
+                                    <th className="py-3 px-4 font-semibold text-black">Company</th>
                                 </tr>
-                            ))}
-                        </tbody>
-                    </table>
-                </div>
-            </Card>
-
-            <Modal isOpen={!!selected} onClose={() => setSelected(null)}>
-                {selected && (
-                    <div>
-                        <h3 className="text-lg font-bold">{selected.name}</h3>
-                        <p className="text-sm text-gray-600">{selected.email}</p>
-                        <p className="mt-2">{selected.company?.name}</p>
-                        <p className="text-sm text-gray-500 mt-2">Phone: {selected.phone}</p>
-                        <p className="text-sm text-gray-500">Website: {selected.website}</p>
+                            </thead>
+                            <tbody>
+                                {filtered?.map((u, idx) => (
+                                    <tr
+                                        key={u.id}
+                                        onClick={() => setSelected(u)}
+                                        className={`cursor-pointer transition-colors duration-150 ${
+                                            idx % 2 === 0 ? 'bg-white' : 'bg-gray-50'
+                                        } hover:bg-indigo-50`}
+                                    >
+                                        <td className="py-3 px-4 font-medium text-gray-800">{u.name}</td>
+                                        <td className="py-3 px-4 text-gray-600">{u.email}</td>
+                                        <td className="py-3 px-4 text-gray-600">{u.company?.name}</td>
+                                    </tr>
+                                ))}
+                            </tbody>
+                        </table>
                     </div>
-                )}
-            </Modal>
+                </Card>
+            </Suspense>
+
+            <Suspense fallback={null}>
+                <Modal isOpen={!!selected} onClose={() => setSelected(null)}>
+                    {selected && (
+                        <div>
+                            <h3 className="text-lg font-bold">{selected.name}</h3>
+                            <p className="text-sm text-gray-600">{selected.email}</p>
+                            <p className="mt-2">{selected.company?.name}</p>
+                            <p className="text-sm text-gray-500 mt-2">Phone: {selected.phone}</p>
+                            <p className="text-sm text-gray-500">Website: {selected.website}</p>
+                        </div>
+                    )}
+                </Modal>
+            </Suspense>
         </div>
     );
 }
