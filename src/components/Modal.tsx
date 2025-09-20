@@ -28,7 +28,7 @@ export default function Modal({
                         className="bg-white p-4 sm:p-6 rounded-lg w-full max-w-md shadow-lg"
                     >
                         <div className="flex justify-end">
-                            <button onClick={onClose} className="text-gray-500">
+                            <button onClick={onClose} className="cursor-pointer text-gray-500">
                                 Close
                             </button>
                         </div>

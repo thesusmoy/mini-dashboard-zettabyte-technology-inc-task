@@ -44,7 +44,7 @@ export default function Sidebar() {
                     <button
                         onClick={() => setOpen((v) => !v)}
                         aria-label="toggle"
-                        className="text-gray-700 hover:text-gray-700"
+                        className="cursor-pointer text-gray-700 hover:text-gray-700"
                     >
                         {open ? <HiOutlineX /> : <HiOutlineMenu />}
                     </button>

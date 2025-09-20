@@ -85,10 +85,10 @@ export default function HomePage() {
 
                     <Card title="Quick Links">
                         <div className="space-y-2 text-sm">
-                            <Link href="/posts" className="block text-blue-600">
+                            <Link href="/posts" className="block text-blue-600 hover:underline">
                                 Posts
                             </Link>
-                            <Link href="/users" className="block text-blue-600">
+                            <Link href="/users" className="block text-blue-600 hover:underline">
                                 Users
                             </Link>
                         </div>
@@ -96,17 +96,11 @@ export default function HomePage() {
                 </div>
             </div>
             <div className="mt-8 flex flex-col md:flex-row gap-6 items-start w-full">
-                <div
-                    className="w-full md:w-1/3 bg-white rounded-lg p-4 shadow-sm mb-4 md:mb-0 flex items-center justify-center"
-                    style={{ minHeight: 340 }}
-                >
-                    <PieChart height={120} />
+                <div className="w-full md:w-1/3 bg-white rounded-lg p-4 shadow-sm mb-4 md:mb-0">
+                    <PieChart />
                 </div>
-                <div
-                    className="w-full md:w-1/3 bg-white rounded-lg p-4 shadow-sm flex items-center justify-center"
-                    style={{ minHeight: 340 }}
-                >
-                    <BigChart height={320} />
+                <div className="w-full md:w-1/3 bg-white rounded-lg p-4 shadow-sm">
+                    <BigChart />
                 </div>
             </div>
         </>
