@@ -17,6 +17,25 @@ import useDebounce from '../../hooks/useDebounce';
 import type { User } from '../../types/entities';
 
 export default function UsersPage() {
+    function exportUsersToCSV(users: User[]) {
+        if (!users?.length) return;
+        const header = ['Name', 'Email', 'Company'];
+        const rows = users.map((u) => [
+            '"' + u.name.replace(/"/g, '""') + '"',
+            '"' + u.email.replace(/"/g, '""') + '"',
+            '"' + (u.company?.name?.replace(/"/g, '""') || '') + '"',
+        ]);
+        const csv = [header, ...rows].map((r) => r.join(',')).join('\n');
+        const blob = new Blob([csv], { type: 'text/csv' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = 'users.csv';
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+    }
     const { data, loading, error } = useFetch<User[]>(process.env.NEXT_PUBLIC_API_URL + '/users');
     const [selected, setSelected] = useState<User | null>(null);
     const [search, setSearch] = useState('');
@@ -31,15 +50,25 @@ export default function UsersPage() {
 
     return (
         <div>
-            <div className="flex items-center justify-between mb-4">
+            <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-2 mb-4">
                 <h2 className="text-xl font-bold">Users</h2>
-                <input
-                    type="text"
-                    placeholder="Search users..."
-                    value={search}
-                    onChange={(e) => setSearch(e.target.value)}
-                    className="border px-2 py-1 rounded-md text-sm"
-                />
+                <div className="flex gap-2">
+                    <input
+                        type="text"
+                        placeholder="Search users..."
+                        value={search}
+                        onChange={(e) => setSearch(e.target.value)}
+                        className="border px-2 py-1 rounded-md text-sm"
+                    />
+                    <button
+                        onClick={() => exportUsersToCSV(filtered || [])}
+                        className="px-3 py-1 rounded bg-indigo-500 text-white font-semibold hover:bg-indigo-600 transition-colors text-sm shadow"
+                        disabled={!filtered?.length}
+                        title="Export filtered users as CSV"
+                    >
+                        Export CSV
+                    </button>
+                </div>
             </div>
             {loading && (
                 <div className="flex justify-center items-center py-8">
