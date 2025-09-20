@@ -1,4 +1,13 @@
 'use client';
+// Simple spinner component
+function Spinner() {
+    return (
+        <span
+            className="inline-block w-5 h-5 border-2 border-indigo-400 border-t-transparent rounded-full animate-spin align-middle"
+            aria-label="Loading"
+        />
+    );
+}
 import React, { useState } from 'react';
 import useFetch from '../../hooks/useFetch';
 import Card from '../../components/Card';
@@ -8,7 +17,7 @@ import useDebounce from '../../hooks/useDebounce';
 import type { User } from '../../types/entities';
 
 export default function UsersPage() {
-    const { data, loading, error } = useFetch<User[]>(process.env.API_URL + '/users');
+    const { data, loading, error } = useFetch<User[]>(process.env.NEXT_PUBLIC_API_URL + '/users');
     const [selected, setSelected] = useState<User | null>(null);
     const [search, setSearch] = useState('');
     const debouncedSearch = useDebounce(search, 300);
@@ -32,7 +41,12 @@ export default function UsersPage() {
                     className="border px-2 py-1 rounded-md text-sm"
                 />
             </div>
-            {loading && <div>Loading users...</div>}
+            {loading && (
+                <div className="flex justify-center items-center py-8">
+                    <Spinner />
+                    <span className="ml-2 text-gray-500">Loading users...</span>
+                </div>
+            )}
             {error && <div className="text-red-600">Failed to load users: {error}</div>}
 
             <Card>

@@ -1,4 +1,14 @@
 'use client';
+// Simple spinner component
+function Spinner() {
+    return (
+        <span
+            className="inline-block w-5 h-5 border-2 border-indigo-400 border-t-transparent rounded-full animate-spin align-middle"
+            aria-label="Loading"
+        />
+    );
+}
+
 import React, { useState } from 'react';
 import useFetch from '../../hooks/useFetch';
 import Card from '../../components/Card';
@@ -12,7 +22,7 @@ export default function PostsPage() {
     const [simulateError, setSimulateError] = useState(false);
     const [search, setSearch] = useState('');
     const debouncedSearch = useDebounce(search, 300);
-    const { data, loading, error } = useFetch<Post[]>(process.env.API_URL + '/posts', { simulateError });
+    const { data, loading, error } = useFetch<Post[]>(process.env.NEXT_PUBLIC_API_URL + '/posts', { simulateError });
 
     const filtered = data?.filter(
         (p) =>
@@ -38,7 +48,12 @@ export default function PostsPage() {
                 </div>
             </div>
 
-            {loading && <div>Loading posts...</div>}
+            {loading && (
+                <div className="flex justify-center items-center py-8">
+                    <Spinner />
+                    <span className="ml-2 text-gray-500">Loading posts...</span>
+                </div>
+            )}
             {error && <div className="text-red-600">Failed to load posts: {error}</div>}
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">

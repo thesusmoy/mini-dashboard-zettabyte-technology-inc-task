@@ -8,7 +8,7 @@ type Post = { id: number; title: string; body: string; userId: number };
 
 export default function PostPage({ params }: { params: { id: string } }) {
     const id = params.id;
-    const { data, loading, error } = useFetch<Post>(process.env.API_URL + `/posts/${id}`);
+    const { data, loading, error } = useFetch<Post>(process.env.NEXT_PUBLIC_API_URL + `/posts/${id}`);
 
     return (
         <div>

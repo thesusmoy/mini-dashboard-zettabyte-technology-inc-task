@@ -27,7 +27,7 @@ export default function Sidebar() {
                 className="h-screen bg-white shadow-md overflow-hidden"
             >
                 <div className="flex text-black items-center justify-between p-4">
-                    <span className={`font-bold text-lg ${!open && 'truncate hidden'}`}>Dashboard</span>
+                    <span className={`font-bold text-lg ${!open && 'truncate hidden'}`}>Dash_</span>
                     <button onClick={() => setOpen((v) => !v)} aria-label="toggle">
                         {open ? <HiOutlineX /> : <HiOutlineMenu />}
                     </button>
@@ -47,11 +47,7 @@ export default function Sidebar() {
                                 </motion.span>
                                 {!open && (
                                     <div className="text-center">
-                                        <img
-                                            src={imgs[index].href}
-                                            alt={imgs[index].alt}
-                                            className="w-6 h-6" // Adjust the size of the image
-                                        />
+                                        <img src={imgs[index].href} alt={imgs[index].alt} className="w-6 h-6" />
                                     </div>
                                 )}
                             </div>
