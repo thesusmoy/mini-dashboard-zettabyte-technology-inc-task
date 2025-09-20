@@ -64,17 +64,13 @@ export default function HomePage() {
                         <div className="mt-4 flex gap-4">
                             <div className="text-center">
                                 <div className="text-xl font-bold min-h-[1.5em] flex items-center justify-center">
-                                    {postsLoading ? (
-                                        <span className="block w-10 h-6 bg-gray-200 rounded animate-pulse" />
-                                    ) : posts?.length ?? 0}
+                                    {postsLoading ? <Spinner /> : posts?.length ?? 0}
                                 </div>
                                 <div className="text-xs text-gray-500">Posts</div>
                             </div>
                             <div className="text-center">
                                 <div className="text-xl font-bold min-h-[1.5em] flex items-center justify-center">
-                                    {usersLoading ? (
-                                        <span className="block w-10 h-6 bg-gray-200 rounded animate-pulse" />
-                                    ) : users?.length ?? 0}
+                                    {usersLoading ? <Spinner /> : users?.length ?? 0}
                                 </div>
                                 <div className="text-xs text-gray-500">Users</div>
                             </div>
@@ -100,11 +96,17 @@ export default function HomePage() {
                 </div>
             </div>
             <div className="mt-8 flex flex-col md:flex-row gap-6 items-start w-full">
-                <div className="w-full md:w-1/3 bg-white rounded-lg p-4 shadow-sm">
-                    <PieChart />
+                <div
+                    className="w-full md:w-1/3 bg-white rounded-lg p-4 shadow-sm mb-4 md:mb-0 flex items-center justify-center"
+                    style={{ minHeight: 340 }}
+                >
+                    <PieChart height={120} />
                 </div>
-                <div className="w-full md:w-1/3 bg-white rounded-lg p-4 shadow-sm">
-                    <BigChart />
+                <div
+                    className="w-full md:w-1/3 bg-white rounded-lg p-4 shadow-sm flex items-center justify-center"
+                    style={{ minHeight: 340 }}
+                >
+                    <BigChart height={320} />
                 </div>
             </div>
         </>

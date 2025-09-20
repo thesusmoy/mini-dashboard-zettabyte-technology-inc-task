@@ -34,13 +34,15 @@ export default function PostsPage() {
         ) || [];
 
     const totalPages = Math.ceil(filtered.length / perPage);
-    const paginated = filtered.slice((page - 1) * perPage, page * perPage);
+    // On mobile, show all posts (no pagination); on desktop, paginate
+    const isMobile = typeof window !== 'undefined' && window.innerWidth < 640;
+    const paginated = isMobile ? filtered : filtered.slice((page - 1) * perPage, page * perPage);
 
     return (
         <div>
-            <div className="flex items-center justify-between mb-4">
+            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 mb-4">
                 <h2 className="text-xl font-bold">Posts</h2>
-                <div className="flex gap-2">
+                <div className="flex flex-col sm:flex-row gap-2 w-full sm:w-auto">
                     <input
                         type="text"
                         placeholder="Search posts..."
@@ -49,9 +51,12 @@ export default function PostsPage() {
                             setSearch(e.target.value);
                             setPage(1);
                         }}
-                        className="border px-2 py-1 rounded-md text-sm"
+                        className="border px-2 py-1 rounded-md text-sm w-full sm:w-auto"
                     />
-                    <button onClick={() => setSimulateError((s) => !s)} className="px-3 py-1 border rounded-md text-sm">
+                    <button
+                        onClick={() => setSimulateError((s) => !s)}
+                        className="px-3 py-1 border rounded-md text-sm w-full sm:w-auto"
+                    >
                         {simulateError ? 'Turn off error' : 'Simulate Error'}
                     </button>
                 </div>
@@ -65,8 +70,15 @@ export default function PostsPage() {
             )}
             {error && <div className="text-red-600">Failed to load posts: {error}</div>}
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-4">
-                <AnimatePresence>
+            <AnimatePresence mode="wait">
+                <motion.div
+                    key={isMobile ? 'all' : page}
+                    initial={{ opacity: 0, y: 24 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -24 }}
+                    transition={{ duration: 0.35 }}
+                    className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6 mt-4"
+                >
                     {paginated.map((p, i) => (
                         <motion.div
                             key={p.id}
@@ -85,16 +97,16 @@ export default function PostsPage() {
                             </Link>
                         </motion.div>
                     ))}
-                </AnimatePresence>
-            </div>
+                </motion.div>
+            </AnimatePresence>
 
-            {/* Pagination Controls */}
-            {totalPages > 1 && (
-                <div className="flex justify-center items-center gap-2 mt-8">
+            {/* Pagination Controls (desktop only) */}
+            {!isMobile && totalPages > 1 && (
+                <div className="hidden sm:flex justify-center items-center gap-2 mt-8 overflow-x-auto w-full flex-nowrap pl-2">
                     <button
                         onClick={() => setPage((p) => Math.max(1, p - 1))}
                         disabled={page === 1}
-                        className="px-3 py-1 rounded bg-gray-100 text-gray-600 disabled:opacity-50"
+                        className="px-3 py-1 rounded bg-gray-100 text-gray-600 disabled:opacity-50 min-w-[60px] flex-shrink-0"
                     >
                         Prev
                     </button>
@@ -102,7 +114,7 @@ export default function PostsPage() {
                         <button
                             key={i + 1}
                             onClick={() => setPage(i + 1)}
-                            className={`px-3 py-1 rounded font-semibold ${
+                            className={`px-3 py-1 rounded font-semibold min-w-[40px] flex-shrink-0 ${
                                 page === i + 1 ? 'bg-gray-500 text-white' : 'bg-gray-100 text-gray-600'
                             }`}
                         >
@@ -112,7 +124,7 @@ export default function PostsPage() {
                     <button
                         onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
                         disabled={page === totalPages}
-                        className="px-3 py-1 rounded bg-gray-100 text-gray-600 disabled:opacity-50"
+                        className="px-3 py-1 rounded bg-gray-100 text-gray-600 disabled:opacity-50 min-w-[60px] flex-shrink-0"
                     >
                         Next
                     </button>

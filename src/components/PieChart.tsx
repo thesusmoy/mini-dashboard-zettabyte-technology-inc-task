@@ -24,5 +24,9 @@ const options = {
 };
 
 export default function PieChart() {
-    return <Pie data={data} options={options} />;
+    return (
+        <div className="w-full max-w-xs mx-auto">
+            <Pie data={data} options={options} />
+        </div>
+    );
 }

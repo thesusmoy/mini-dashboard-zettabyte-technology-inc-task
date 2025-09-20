@@ -16,9 +16,9 @@ export default function Card({ title, children, className = '' }: Props) {
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 0.35 }}
-            className={`bg-white rounded-lg p-4 shadow-sm ${className}`}
+            className={`bg-white rounded-lg p-3 sm:p-4 shadow-sm w-full ${className}`}
         >
-            {title && <h3 className="font-semibold mb-2">{title}</h3>}
+            {title && <h3 className="font-semibold mb-2 text-base sm:text-lg">{title}</h3>}
             <div>{children}</div>
         </motion.div>
     );

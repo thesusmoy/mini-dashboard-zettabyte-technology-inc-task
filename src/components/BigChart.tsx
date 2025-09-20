@@ -29,5 +29,9 @@ const options = {
 };
 
 export default function BigChart() {
-    return <Bar data={data} options={options} height={320} />;
+    return (
+        <div className="w-full overflow-x-auto">
+            <Bar data={data} options={options} height={220} />
+        </div>
+    );
 }

@@ -53,5 +53,9 @@ const sparkOptions = {
 };
 
 export default function SparkLine() {
-    return <Line data={sparkData} options={sparkOptions} height={60} />;
+    return (
+        <div className="w-full overflow-x-auto">
+            <Line data={sparkData} options={sparkOptions} height={60} />
+        </div>
+    );
 }
