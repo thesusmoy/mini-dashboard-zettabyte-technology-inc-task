@@ -8,7 +8,7 @@ function Spinner() {
         />
     );
 }
-import React, { useState } from 'react';
+import React, { useState, useMemo } from 'react';
 import useFetch from '../../hooks/useFetch';
 import Card from '../../components/Card';
 import Modal from '../../components/Modal';
@@ -39,27 +39,116 @@ export default function UsersPage() {
     const { data, loading, error } = useFetch<User[]>(process.env.NEXT_PUBLIC_API_URL + '/users');
     const [selected, setSelected] = useState<User | null>(null);
     const [search, setSearch] = useState('');
+    const [sortBy, setSortBy] = useState<'name' | 'email' | 'company'>('name');
+    const [sortDir, setSortDir] = useState<'asc' | 'desc'>('asc');
+    const [companyFilter, setCompanyFilter] = useState('');
     const debouncedSearch = useDebounce(search, 300);
 
-    const filtered = data?.filter(
-        (u) =>
-            u.name.toLowerCase().includes(debouncedSearch.toLowerCase()) ||
-            u.email.toLowerCase().includes(debouncedSearch.toLowerCase()) ||
-            u.company?.name.toLowerCase().includes(debouncedSearch.toLowerCase())
-    );
+    // Get unique company names for filter dropdown
+    const companyOptions = useMemo(() => {
+        if (!data) return [];
+        return Array.from(new Set(data.map((u) => u.company?.name).filter(Boolean)));
+    }, [data]);
+
+    // Search suggestions (top 5 matches)
+    const suggestions = useMemo(() => {
+        if (!data || !search) return [];
+        const s = search.toLowerCase();
+        return data
+            .filter(
+                (u) =>
+                    u.name.toLowerCase().includes(s) ||
+                    u.email.toLowerCase().includes(s) ||
+                    u.company?.name.toLowerCase().includes(s)
+            )
+            .slice(0, 5);
+    }, [data, search]);
+
+    // Filter, sort, and search
+    const filtered = useMemo(() => {
+        let users = data || [];
+        if (companyFilter) {
+            users = users.filter((u) => u.company?.name === companyFilter);
+        }
+        if (debouncedSearch) {
+            const s = debouncedSearch.toLowerCase();
+            users = users.filter(
+                (u) =>
+                    u.name.toLowerCase().includes(s) ||
+                    u.email.toLowerCase().includes(s) ||
+                    u.company?.name.toLowerCase().includes(s)
+            );
+        }
+        users = users.slice().sort((a, b) => {
+            let aVal = sortBy === 'company' ? a.company?.name || '' : a[sortBy];
+            let bVal = sortBy === 'company' ? b.company?.name || '' : b[sortBy];
+            if (aVal < bVal) return sortDir === 'asc' ? -1 : 1;
+            if (aVal > bVal) return sortDir === 'asc' ? 1 : -1;
+            return 0;
+        });
+        return users;
+    }, [data, debouncedSearch, companyFilter, sortBy, sortDir]);
 
     return (
         <div>
             <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-2 mb-4">
                 <h2 className="text-xl font-bold">Users</h2>
-                <div className="flex gap-2">
-                    <input
-                        type="text"
-                        placeholder="Search users..."
-                        value={search}
-                        onChange={(e) => setSearch(e.target.value)}
+                <div className="flex flex-wrap gap-2 items-center">
+                    {/* Search with suggestions */}
+                    <div className="relative">
+                        <input
+                            type="text"
+                            placeholder="Search users..."
+                            value={search}
+                            onChange={(e) => setSearch(e.target.value)}
+                            className="border px-2 py-1 rounded-md text-sm"
+                            autoComplete="off"
+                        />
+                        {search && suggestions.length > 0 && (
+                            <ul className="absolute z-10 left-0 right-0 bg-white border rounded shadow mt-1 text-sm">
+                                {suggestions.map((u) => (
+                                    <li
+                                        key={u.id}
+                                        className="px-3 py-1 hover:bg-indigo-50 cursor-pointer"
+                                        onClick={() => setSearch(u.name)}
+                                    >
+                                        {u.name} <span className="text-gray-400">({u.email})</span>
+                                    </li>
+                                ))}
+                            </ul>
+                        )}
+                    </div>
+                    {/* Company filter */}
+                    <select
+                        value={companyFilter}
+                        onChange={(e) => setCompanyFilter(e.target.value)}
                         className="border px-2 py-1 rounded-md text-sm"
-                    />
+                    >
+                        <option value="">All Companies</option>
+                        {companyOptions.map((c) => (
+                            <option key={c} value={c}>
+                                {c}
+                            </option>
+                        ))}
+                    </select>
+                    {/* Sort options */}
+                    <select
+                        value={sortBy}
+                        onChange={(e) => setSortBy(e.target.value as 'name' | 'email' | 'company')}
+                        className="border px-2 py-1 rounded-md text-sm"
+                    >
+                        <option value="name">Sort by Name</option>
+                        <option value="email">Sort by Email</option>
+                        <option value="company">Sort by Company</option>
+                    </select>
+                    <button
+                        onClick={() => setSortDir((d) => (d === 'asc' ? 'desc' : 'asc'))}
+                        className="px-2 py-1 rounded bg-gray-100 text-gray-600 border text-xs"
+                        title="Toggle sort direction"
+                    >
+                        {sortDir === 'asc' ? '↑' : '↓'}
+                    </button>
+                    {/* Export */}
                     <button
                         onClick={() => exportUsersToCSV(filtered || [])}
                         className="px-3 py-1 rounded bg-indigo-500 text-white font-semibold hover:bg-indigo-600 transition-colors text-sm shadow"

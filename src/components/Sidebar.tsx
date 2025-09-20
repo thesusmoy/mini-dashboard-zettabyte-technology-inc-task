@@ -2,13 +2,21 @@
 import React, { useState } from 'react';
 import Link from 'next/link';
 import { motion, AnimatePresence } from 'framer-motion';
-import { HiOutlineMenu, HiOutlineX, HiOutlineHome, HiOutlineDocumentText, HiOutlineUser } from 'react-icons/hi';
+import {
+    HiOutlineMenu,
+    HiOutlineX,
+    HiOutlineHome,
+    HiOutlineDocumentText,
+    HiOutlineUser,
+    HiOutlineCog,
+} from 'react-icons/hi';
 import { usePathname } from 'next/navigation';
 
 const items = [
     { href: '/', label: 'Dashboard', icon: <HiOutlineHome className="w-6 h-6" /> },
     { href: '/posts', label: 'Posts', icon: <HiOutlineDocumentText className="w-6 h-6" /> },
     { href: '/users', label: 'Users', icon: <HiOutlineUser className="w-6 h-6" /> },
+    { href: '/settings', label: 'Settings', icon: <HiOutlineCog className="w-6 h-6" /> },
 ];
 
 export default function Sidebar() {
