@@ -64,13 +64,17 @@ export default function HomePage() {
                         <div className="mt-4 flex gap-4">
                             <div className="text-center">
                                 <div className="text-xl font-bold min-h-[1.5em] flex items-center justify-center">
-                                    {postsLoading ? <Spinner /> : posts?.length ?? 0}
+                                    {postsLoading ? (
+                                        <span className="block w-10 h-6 bg-gray-200 rounded animate-pulse" />
+                                    ) : posts?.length ?? 0}
                                 </div>
                                 <div className="text-xs text-gray-500">Posts</div>
                             </div>
                             <div className="text-center">
                                 <div className="text-xl font-bold min-h-[1.5em] flex items-center justify-center">
-                                    {usersLoading ? <Spinner /> : users?.length ?? 0}
+                                    {usersLoading ? (
+                                        <span className="block w-10 h-6 bg-gray-200 rounded animate-pulse" />
+                                    ) : users?.length ?? 0}
                                 </div>
                                 <div className="text-xs text-gray-500">Users</div>
                             </div>
@@ -99,7 +103,7 @@ export default function HomePage() {
                 <div className="w-full md:w-1/3 bg-white rounded-lg p-4 shadow-sm">
                     <PieChart />
                 </div>
-                <div className="w-full md:w-2/3 bg-white rounded-lg p-4 shadow-sm">
+                <div className="w-full md:w-1/3 bg-white rounded-lg p-4 shadow-sm">
                     <BigChart />
                 </div>
             </div>

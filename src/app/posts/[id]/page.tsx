@@ -1,13 +1,13 @@
 'use client';
-import React from 'react';
+import React, { use } from 'react';
 // import { useRouter } from 'next/navigation';
 import useFetch from '../../../hooks/useFetch';
 import Card from '../../../components/Card';
 
 type Post = { id: number; title: string; body: string; userId: number };
 
-export default function PostPage({ params }: { params: { id: string } }) {
-    const id = params.id;
+export default function PostPage({ params }: { params: Promise<{ id: string }> }) {
+    const { id } = use(params);
     const { data, loading, error } = useFetch<Post>(process.env.NEXT_PUBLIC_API_URL + `/posts/${id}`);
 
     return (
