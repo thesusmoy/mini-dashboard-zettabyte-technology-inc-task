@@ -11,9 +11,9 @@ const items = [
 ];
 
 const imgs = [
-    { href: '/images/file.svg', atl: '' },
-    { href: '/images/file.svg', atl: '' },
-    { href: '/images/file.svg', atl: '' },
+    { href: '/images/dashboard.svg', alt: 'Dashboard icon' },
+    { href: '/images/post.svg', alt: 'Post icon' },
+    { href: '/images/user.svg', alt: 'User icon' },
 ];
 
 export default function Sidebar() {
@@ -34,7 +34,7 @@ export default function Sidebar() {
                 </div>
 
                 <nav className="mt-6 bg-gray-100 text-black">
-                    {items.map((i) => (
+                    {items.map((i, index) => (
                         <Link key={i.href} href={i.href} className="block">
                             <div className="px-4 py-3 hover:bg-blue-100">
                                 <motion.span
@@ -45,7 +45,15 @@ export default function Sidebar() {
                                 >
                                     {i.label}
                                 </motion.span>
-                                {!open && <div className="text-center">•</div>}
+                                {!open && (
+                                    <div className="text-center">
+                                        <img
+                                            src={imgs[index].href}
+                                            alt={imgs[index].alt}
+                                            className="w-6 h-6" // Adjust the size of the image
+                                        />
+                                    </div>
+                                )}
                             </div>
                         </Link>
                     ))}

@@ -1,16 +1,28 @@
 'use client';
+
 import React from 'react';
 import Card from '../components/Card';
 import { motion } from 'framer-motion';
 import Link from 'next/link';
+// import { useSession } from 'next-auth/react';
 
 export default function HomePage() {
     const sparkValues = [20, 40, 25, 55, 35, 65];
+    // const { data: session, status } = useSession();
+
+    // if (status === 'loading') return <div>Loading...</div>;
+    // if (!session) {
+    //     return (
+    //         <div className="flex justify-center items-center h-full text-lg">Please sign in to view the dashboard.</div>
+    //     );
+    // }
 
     return (
         <div className="space-y-6">
             <div className="flex items-center justify-between">
+                {/* <h1 className="text-2xl font-bold">Welcome, {session.user?.name || 'User'}</h1> */}
                 <h1 className="text-2xl font-bold">Welcome, Susmoy</h1>
+
                 <p className="text-sm text-gray-500">Mini Dashboard demo</p>
             </div>
 

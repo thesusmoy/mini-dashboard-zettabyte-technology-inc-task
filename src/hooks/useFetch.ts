@@ -1,5 +1,6 @@
 'use client';
 import { useEffect, useState } from 'react';
+import { handleError } from '../lib/error';
 
 export type FetchState<T> = {
     data: T | null;
@@ -28,7 +29,7 @@ export default function useFetch<T = Record<string, unknown>>(url: string, optio
                 setState({ data, loading: false, error: null });
             } catch (err: unknown) {
                 if (!mounted) return;
-                setState({ data: null, loading: false, error: (err as Error).message || 'Failed to fetch' });
+                setState({ data: null, loading: false, error: handleError(err) });
             }
         }
         fetcher();

@@ -3,23 +3,35 @@ import React, { useState } from 'react';
 import useFetch from '../../hooks/useFetch';
 import Card from '../../components/Card';
 import Modal from '../../components/Modal';
+import useDebounce from '../../hooks/useDebounce';
 
-type User = {
-    id: number;
-    name: string;
-    email: string;
-    company: { name: string };
-    phone: string;
-    website: string;
-};
+import type { User } from '../../types/entities';
 
 export default function UsersPage() {
-    const { data, loading, error } = useFetch<User[]>(process.env.NEXT_PUBLIC_URL + '/users');
+    const { data, loading, error } = useFetch<User[]>(process.env.API_URL + '/users');
     const [selected, setSelected] = useState<User | null>(null);
+    const [search, setSearch] = useState('');
+    const debouncedSearch = useDebounce(search, 300);
+
+    const filtered = data?.filter(
+        (u) =>
+            u.name.toLowerCase().includes(debouncedSearch.toLowerCase()) ||
+            u.email.toLowerCase().includes(debouncedSearch.toLowerCase()) ||
+            u.company?.name.toLowerCase().includes(debouncedSearch.toLowerCase())
+    );
 
     return (
         <div>
-            <h2 className="text-xl font-bold mb-4">Users</h2>
+            <div className="flex items-center justify-between mb-4">
+                <h2 className="text-xl font-bold">Users</h2>
+                <input
+                    type="text"
+                    placeholder="Search users..."
+                    value={search}
+                    onChange={(e) => setSearch(e.target.value)}
+                    className="border px-2 py-1 rounded-md text-sm"
+                />
+            </div>
             {loading && <div>Loading users...</div>}
             {error && <div className="text-red-600">Failed to load users: {error}</div>}
 
@@ -34,7 +46,7 @@ export default function UsersPage() {
                             </tr>
                         </thead>
                         <tbody>
-                            {data?.map((u) => (
+                            {filtered?.map((u) => (
                                 <tr
                                     key={u.id}
                                     onClick={() => setSelected(u)}

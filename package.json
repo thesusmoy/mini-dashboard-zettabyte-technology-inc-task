@@ -1,6 +1,6 @@
 {
     "name": "mini-dashboard",
-    "version": "0.1.0",
+    "version": "1.0.0",
     "private": true,
     "author": {
         "name": "Susmoy Debnath",
@@ -13,6 +13,8 @@
         "lint": "eslint"
     },
     "dependencies": {
+        "@auth/core": "^0.40.0",
+        "@auth/nextjs": "^0.0.0-380f8d56",
         "dotenv": "^17.2.2",
         "framer-motion": "^12.23.12",
         "next": "15.5.2",
